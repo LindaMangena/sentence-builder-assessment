@@ -16,8 +16,6 @@ namespace SentenceBuilder.Api.Data
     {
         public static void Seed(AppDbContext db, IWebHostEnvironment environment)
         {
-            if (db.Words.Any()) return;
-
             var seedPath = Path.Combine(environment.ContentRootPath, "Data", "words.json");
             var seedJson = File.ReadAllText(seedPath);
             var words = JsonSerializer.Deserialize<List<Word>>(seedJson, new JsonSerializerOptions
@@ -25,7 +23,17 @@ namespace SentenceBuilder.Api.Data
                 PropertyNameCaseInsensitive = true
             }) ?? new List<Word>();
 
-            db.Words.AddRange(words);
+            var existingKeys = db.Words
+                .Select(w => (w.Type + "|" + w.Text).ToLower())
+                .ToHashSet();
+
+            var missingWords = words
+                .Where(w => !existingKeys.Contains((w.Type + "|" + w.Text).ToLower()))
+                .ToList();
+
+            if (!missingWords.Any()) return;
+
+            db.Words.AddRange(missingWords);
             db.SaveChanges();
         }
     }
