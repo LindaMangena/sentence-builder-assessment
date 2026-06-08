@@ -1,0 +1,86 @@
+<main class="app-shell">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Full stack assessment</p>
+      <h1>Sentence Builder</h1>
+      <p class="subtitle">Pick words by type, build a sentence, then save and manage submitted sentences.</p>
+    </div>
+  </section>
+
+  <section class="workspace">
+    <div class="builder-panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Create</p>
+          <h2>{{ editId ? 'Edit sentence' : 'Build a sentence' }}</h2>
+        </div>
+        <button type="button" class="ghost-button" (click)="resetBuilder()" [disabled]="!sentenceWords.length && !editId">
+          Reset
+        </button>
+      </div>
+
+      <div class="controls">
+        <label>
+          <span>Word type</span>
+          <select [ngModel]="selectedType" (ngModelChange)="selectType($event)">
+            <option *ngFor="let type of types" [value]="type">{{ type }}</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Word</span>
+          <select [(ngModel)]="selectedWordId">
+            <option *ngFor="let word of wordsForSelectedType" [ngValue]="word.id">{{ word.text }}</option>
+          </select>
+        </label>
+
+        <button type="button" class="primary-button" (click)="addWord()" [disabled]="!selectedWordId">
+          Add word
+        </button>
+      </div>
+
+      <div class="sentence-preview" [class.empty]="!sentenceWords.length">
+        <span *ngIf="!sentenceWords.length">Your sentence will appear here.</span>
+        <strong *ngIf="sentenceWords.length">{{ currentSentence }}</strong>
+      </div>
+
+      <div class="word-list" *ngIf="sentenceWords.length">
+        <div class="word-chip" *ngFor="let word of sentenceWords; let i = index">
+          <span>{{ word }}</span>
+          <button type="button" title="Move left" (click)="moveWord(i, -1)" [disabled]="i === 0">‹</button>
+          <button type="button" title="Move right" (click)="moveWord(i, 1)" [disabled]="i === sentenceWords.length - 1">›</button>
+          <button type="button" title="Remove word" (click)="removeWord(i)">x</button>
+        </div>
+      </div>
+
+      <p class="error-message" *ngIf="error">{{ error }}</p>
+
+      <div class="actions">
+        <button type="button" class="primary-button" (click)="submitSentence()" [disabled]="!sentenceWords.length || saving">
+          {{ editId ? 'Update sentence' : 'Save sentence' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="list-panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Read, update, delete</p>
+          <h2>Submitted sentences</h2>
+        </div>
+        <span class="count">{{ sentences.length }}</span>
+      </div>
+
+      <p class="empty-state" *ngIf="loading">Loading sentences...</p>
+      <p class="empty-state" *ngIf="!loading && !sentences.length">No sentences saved yet.</p>
+
+      <article class="sentence-row" *ngFor="let sentence of sentences">
+        <p>{{ sentence.text }}</p>
+        <div class="row-actions">
+          <button type="button" class="ghost-button" (click)="editSentence(sentence)">Edit</button>
+          <button type="button" class="danger-button" (click)="deleteSentence(sentence)">Delete</button>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
