@@ -12,7 +12,7 @@ This project contains a .NET Web API backend and an Angular frontend for buildin
 - Store submitted sentences in a local SQLite database.
 - Seed selectable words from a persisted backend data file into SQLite; the frontend does not hardcode the word catalogue.
 - Responsive layout for desktop and mobile widths.
-- Backend Dockerfile included for containerization.
+- Docker containerization for both frontend and backend.
 
 ## Backend
 
@@ -44,6 +44,25 @@ cd backend
 docker build -t sentence-builder-api .
 docker run --rm -p 5000:80 sentence-builder-api
 ```
+
+## Run With Docker Compose
+
+Requirements:
+
+- Docker Desktop
+
+Run the full application:
+
+```bash
+docker compose up --build
+```
+
+Then open:
+
+- Frontend: `http://localhost:4200`
+- Backend API: `http://localhost:5000/api`
+
+Docker Compose runs the Angular frontend through Nginx and the .NET API in a separate container. Submitted sentences are persisted in a Docker volume-backed SQLite database.
 
 ## Frontend
 

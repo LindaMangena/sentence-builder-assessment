@@ -26,3 +26,5 @@ Run with Docker:
 docker build -t sentence-builder-api .
 docker run --rm -p 5000:80 sentence-builder-api
 ```
+
+When running through the root `docker-compose.yml`, submitted sentences are stored in a Docker volume so the SQLite database survives container restarts.

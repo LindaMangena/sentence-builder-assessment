@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: sentence-builder-api
+    environment:
+      ConnectionStrings__Default: Data Source=/app/data/sentencebuilder.db
+    ports:
+      - "5000:80"
+    volumes:
+      - sentence-builder-data:/app/data
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: sentence-builder-web
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+
+volumes:
+  sentence-builder-data:

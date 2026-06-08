@@ -16,3 +16,10 @@ Features:
 - Select words grouped by word type.
 - Build, reorder, and remove words before saving.
 - Create, edit, and delete saved sentences.
+
+Run with Docker:
+
+```bash
+docker build -t sentence-builder-web .
+docker run --rm -p 4200:80 sentence-builder-web
+```
